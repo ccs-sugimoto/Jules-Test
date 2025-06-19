@@ -94,12 +94,8 @@ function drawBoard() {
     board.forEach((row, rIndex) => {
         row.forEach((cellValue, cIndex) => {
             if (cellValue) { // セルにブロックが存在する場合 (0以外)
-                // 固定されたブロックの色を決定 (TETROMINOSオブジェクトから探す、見つからなければデフォルト色)
-                // 注意: 現在の実装ではcellValueにテトリミノの種類を保存していないため、この色決定は不正確になる可能性がある。
-                //       より正確にするには、fixTetrominoでテトリミノの種類や色情報をboardに保存する必要がある。
-                //       現状は、TETROMINOSのshape定義に存在する値であればその色を、なければ灰色(#ccc)を使用。
-                const fixedBlockColor = Object.values(TETROMINOS).find(t => t.shape.flat().includes(cellValue))?.color || '#ccc';
-                context.fillStyle = fixedBlockColor;
+                // ボードに保存された色情報を直接使用する
+                context.fillStyle = cellValue;
                 context.fillRect(cIndex * BLOCK_SIZE, rIndex * BLOCK_SIZE, BLOCK_SIZE, BLOCK_SIZE);
                 context.strokeStyle = '#333';
                 context.strokeRect(cIndex * BLOCK_SIZE, rIndex * BLOCK_SIZE, BLOCK_SIZE, BLOCK_SIZE);
@@ -213,7 +209,7 @@ function fixTetromino() {
                 // cell の値 (通常は1) をそのまま使うか、テトリミノの種類を示すIDを使うかは設計による。
                 // ここでは、shape内の最初の非ゼロ値を簡易的な識別子として使用。
                 // (より良いのは、TETROMINOSのキーやインデックス、または色情報と関連付けたID)
-                board[currentY + rIndex][currentX + cIndex] = currentTetromino.shape.flat().find(val => val !== 0) || 1;
+                board[currentY + rIndex][currentX + cIndex] = currentTetromino.color;
             }
         });
     });
